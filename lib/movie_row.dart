@@ -77,7 +77,7 @@ class _MovieRowState extends State<MovieRow> {
                     ),
                   ),
                   Container(
-                    height: widget.isLarge ? 300 : 150,
+                    height: widget.isLarge ? 250 : 150,
                     child: ListView(
                       scrollDirection: Axis.horizontal,
                       children: snapshot.data
