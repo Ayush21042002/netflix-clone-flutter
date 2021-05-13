@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import './models/movie.dart';
@@ -34,10 +34,11 @@ class _MovieRowState extends State<MovieRow> {
                     : movie['original_name'] != null
                         ? movie['original_name']
                         : movie['title'],
+                desc: movie['overview'],
                 posterPath: 'https://image.tmdb.org/t/p/original' +
                     movie['poster_path'],
                 backdropPath: 'https://image.tmdb.org/t/p/original' +
-                    movie['backdrop_path']))
+                    movie['backdrop_path'])),
           });
       return extractedMovies;
     } catch (error) {
@@ -53,6 +54,7 @@ class _MovieRowState extends State<MovieRow> {
 
   @override
   Widget build(BuildContext context) {
+    var idx = Random().nextInt(10);
     return FutureBuilder<List<Movie>>(
         future: movies,
         builder: (ctx, snapshot) {
@@ -63,6 +65,77 @@ class _MovieRowState extends State<MovieRow> {
               width: double.infinity,
               child: Column(
                 children: [
+                  if (widget.isLarge)
+                    Stack(
+                      children: [
+                        Container(
+                          width: double.infinity,
+                          height: 300,
+                          child: FittedBox(
+                            fit: BoxFit.fill,
+                            child: Image.network(
+                              snapshot.data[idx].posterPath,
+                              fit: BoxFit.fill,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(left: 10, bottom: 20),
+                          height: 300,
+                          width: 200,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                snapshot.data[idx].name,
+                                style: TextStyle(
+                                  color: Theme.of(context).accentColor,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                snapshot.data[idx].desc
+                                    .substring(0, 100),
+                                style: TextStyle(
+                                  color: Theme.of(context).accentColor,
+                                  fontSize: 14,
+                                ),
+                                softWrap: true,
+                              ),
+                              Row(
+                                children: [
+                                  TextButton(
+                                    style: TextButton.styleFrom(
+                                        backgroundColor: Colors.black45),
+                                    onPressed: () {},
+                                    child: Text(
+                                      'Play',
+                                      style: TextStyle(
+                                        color: Theme.of(context).accentColor,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(width: 10),
+                                  TextButton(
+                                    style: TextButton.styleFrom(
+                                        backgroundColor: Colors.black45),
+                                    onPressed: () {},
+                                    child: Text(
+                                      'My List',
+                                      style: TextStyle(
+                                        color: Theme.of(context).accentColor,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   Container(
                     width: double.infinity,
                     color: Theme.of(context).primaryColor,
